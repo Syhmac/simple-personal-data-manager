@@ -8,10 +8,10 @@ Feel free to check out this project, but don't use it to store your personal dat
 A simple program for managing personal data. It allows you to add, remove, display personal data, and more. The data is stored in a two-way linked list.
 
 ## Features
-- Add any amount of entries to the list [WIP] (capped only by the amount of the memory available)
+- Add any amount of entries to the list (capped only by the amount of the memory available)
 - Search for an entry by name or lastname [WIP]
 - Remove an entry by name or lastname [WIP]
-- Display all entries from the start or the end of the list [WIP]
+- Display all entries from the start or the end of the list
 - Browse entries on the list [WIP]
 - Sorting the list by name or lastname [WIP]
 - Save the list to a file [WIP]
