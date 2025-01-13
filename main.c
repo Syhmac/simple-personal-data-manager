@@ -37,6 +37,22 @@ void freeEntry(Entry *entry) {
     free(entry);
 }
 
+void printEntry(Entry *entry) {
+    // Prints the entry
+    wprintf(L"Name: %hs\n", entry->name);
+    wprintf(L"Lastname: %hs\n", entry->lastname);
+    wprintf(L"Age: %d\n", entry->age);
+    wprintf(L"PESEL: %d\n", entry->pesel);
+    int gender = entry->gender;
+    if (gender == 1) {
+        wprintf(L"Gender: Male\n");
+    } else if (gender == 2) {
+        wprintf(L"Gender: Female\n");
+    } else {
+        wprintf(L"Gender: Non-binary\n");
+    }
+}
+
 Entry* addEntry(Entry *first_entry) {
     // Adds a new entry to the list
     Entry *new_entry = allocateEntry();
@@ -88,17 +104,283 @@ Entry* addEntry(Entry *first_entry) {
 
 Entry* removeEntry(Entry* first_entry) {
     // Removes an entry from the list
-    // WIP
-    return first_entry;
+    system(CLEAR);
+    wprintf(L"Delete by the name or lastname?\n");
+    wprintf(L"1 - name; 2 - lastname\n");
+    int del_by;
+    fflush(stdin);
+    scanf("%d", &del_by);
+    switch(del_by) {
+        case 1: {
+            system(CLEAR);
+            wprintf(L"Enter the name of the entry to delete: ");
+            char name[50] = "";
+            fflush(stdin);
+            scanf("%s", name);
+            Entry *current_entry = first_entry;
+            while (current_entry != nullptr) {
+                if (strcmp(current_entry->name, name) == 0) {
+                    system(CLEAR);
+                    printEntry(current_entry);
+                    wprintf(L"Do you wish to delete this entry?\n");
+                    wprintf(L"1 - yes; 2 - search for another matching entry; 3 - cancel deletion\n");
+                    int del_option;
+                    fflush(stdin);
+                    scanf("%d", &del_option);
+                    switch (del_option) {
+                        case 1: {
+                            if (current_entry->prev == nullptr) { // if this entry is first
+                                first_entry = current_entry->next;
+                                if (first_entry != nullptr) {
+                                    first_entry->prev = nullptr; // first entry always has nullptr as prev
+                                }
+                                freeEntry(current_entry);
+                                system(CLEAR);
+                                wprintf(L"Entry removed successfully\n");
+                                wprintf(L"Press enter to return to the menu\n");
+                                getchar();
+                                getchar();
+                                return first_entry;
+                            }
+                            current_entry->prev->next = current_entry->next; // if it's not first
+                            if (current_entry->next != nullptr) { // if it's not last
+                                current_entry->next->prev = current_entry->prev;
+                            }
+                            freeEntry(current_entry);
+                            system(CLEAR);
+                            wprintf(L"Entry removed successfully\n");
+                            wprintf(L"Press enter to return to the menu\n");
+                            getchar();
+                            getchar();
+                            return first_entry;
+                        }
+                        case 2: {
+                            break;
+                        }
+                        case 3: {
+                            system(CLEAR);
+                            wprintf(L"Canceled operation\n");
+                            wprintf(L"Press enter to return to the menu\n");
+                            getchar();
+                            getchar();
+                            return first_entry;
+                        }
+                        default: {
+                            system(CLEAR);
+                            wprintf(L"Invalid option\n");
+                            wprintf(L"Press enter to return to the menu\n");
+                            getchar();
+                            getchar();
+                            return first_entry;
+                        }
+                    }
+                }
+                current_entry = current_entry->next;
+            }
+            system(CLEAR);
+            wprintf(L"Couldn't find a matching entry\n");
+            wprintf(L"Press enter to return to the menu\n");
+            getchar();
+            getchar();
+            return first_entry;
+        }
+        case 2: {
+            system(CLEAR);
+            wprintf(L"Enter the lastname of the entry to delete: ");
+            char lastname[50] = "";
+            scanf("%s", lastname);
+            Entry *current_entry = first_entry;
+            while (current_entry != nullptr) {
+                if (strcmp(current_entry->lastname, lastname) == 0) {
+                    system(CLEAR);
+                    printEntry(current_entry);
+                    wprintf(L"Do you wish to delete this entry?\n");
+                    wprintf(L"1 - yes; 2 - search for another matching entry; 3 - cancel deletion\n");
+                    int del_option;
+                    fflush(stdin);
+                    scanf("%d", &del_option);
+                    switch (del_option) {
+                        case 1: {
+                            if (current_entry->prev == nullptr) {
+                                first_entry = current_entry->next;
+                                if (first_entry != nullptr) {
+                                    first_entry->prev = nullptr; // first entry always has nullptr as prev
+                                }
+                                freeEntry(current_entry);
+                                system(CLEAR);
+                                wprintf(L"Entry removed successfully\n");
+                                wprintf(L"Press enter to return to the menu\n");
+                                getchar();
+                                getchar();
+                                return first_entry;
+                            }
+                            current_entry->prev->next = current_entry->next;
+                            if (current_entry->next != nullptr) {
+                                current_entry->next->prev = current_entry->prev;
+                            }
+                            freeEntry(current_entry);
+                            system(CLEAR);
+                            wprintf(L"Entry removed successfully\n");
+                            wprintf(L"Press enter to return to the menu\n");
+                            getchar();
+                            getchar();
+                            return first_entry;
+                        }
+                        case 2: {
+                            break;
+                        }
+                        case 3: {
+                            system(CLEAR);
+                            wprintf(L"Canceled operation\n");
+                            wprintf(L"Press enter to return to the menu\n");
+                            getchar();
+                            getchar();
+                            return first_entry;
+                        }
+                        default: {
+                            system(CLEAR);
+                            wprintf(L"Invalid option\n");
+                            wprintf(L"Press enter to return to the menu\n");
+                            getchar();
+                            getchar();
+                            return first_entry;
+                        }
+                    }
+                }
+                current_entry = current_entry->next;
+            }
+            system(CLEAR);
+            wprintf(L"Couldn't find a matching entry\n");
+            wprintf(L"Press enter to return to the menu\n");
+            getchar();
+            getchar();
+            return first_entry;
+        }
+        default: {
+            system(CLEAR);
+            wprintf(L"Invalid option\n");
+            wprintf(L"Press enter to return to the menu\n");
+            getchar();
+            getchar();
+            return first_entry;
+        }
+    }
 }
 
-Entry* findEntry(Entry* first_entry) {
+void findEntry(Entry* first_entry) {
     // Finds an entry in the list
-    // WIP
-    return first_entry;
+    system(CLEAR);
+    wprintf(L"Search by the name or lastname?\n");
+    wprintf(L"1 - name; 2 - lastname\n");
+    int search_by;
+    fflush(stdin);
+    scanf("%d", &search_by);
+    switch(search_by) {
+        case 1: {
+            system(CLEAR);
+            wprintf(L"Enter the name of the entry to find: ");
+            char name[50] = "";
+            fflush(stdin);
+            scanf("%s", name);
+            Entry *current_entry = first_entry;
+            while (current_entry != nullptr) {
+                if (strcmp(current_entry->name, name) == 0) {
+                    system(CLEAR);
+                    printEntry(current_entry);
+                    wprintf(L"Found a matching entry. Do you wish to find next?\n");
+                    wprintf(L"1 - Exit; 2 - Find next\n");
+                    int find_option;
+                    fflush(stdin);
+                    scanf("%d", &find_option);
+                    switch (find_option) {
+                        case 1: {
+                            system(CLEAR);
+                            wprintf(L"Exiting the search function.\n");
+                            wprintf(L"Press enter to return to the menu\n");
+                            getchar();
+                            getchar();
+                            return;
+                        }
+                        case 2: {
+                            break;
+                        }
+                        default: {
+                            system(CLEAR);
+                            wprintf(L"Invalid option\n");
+                            wprintf(L"Press enter to return to the menu\n");
+                            getchar();
+                            getchar();
+                            return;
+                        }
+                    }
+                }
+                current_entry = current_entry->next;
+            }
+            system(CLEAR);
+            wprintf(L"Couldn't find a matching entry\n");
+            wprintf(L"Press enter to return to the menu\n");
+            getchar();
+            getchar();
+            return;
+        }
+        case 2: {
+            system(CLEAR);
+            wprintf(L"Enter the lastname of the entry to find: ");
+            char lastname[50] = "";
+            fflush(stdin);
+            scanf("%s", lastname);
+            Entry *current_entry = first_entry;
+            while (current_entry != nullptr) {
+                if (strcmp(current_entry->lastname, lastname) == 0) {
+                    system(CLEAR);
+                    printEntry(current_entry);
+                    wprintf(L"Found a matching entry. Do you wish to find next?\n");
+                    wprintf(L"1 - Exit; 2 - Find next\n");
+                    int find_option;
+                    fflush(stdin);
+                    scanf("%d", &find_option);
+                    switch (find_option) {
+                        case 1: {
+                            system(CLEAR);
+                            wprintf(L"Exiting the search function.\n");
+                            wprintf(L"Press enter to return to the menu\n");
+                            getchar();
+                            getchar();
+                            return;
+                        }
+                        case 2: {
+                            break;
+                        }
+                        default: {
+                            system(CLEAR);
+                            wprintf(L"Invalid option\n");
+                            wprintf(L"Press enter to return to the menu\n");
+                            getchar();
+                            getchar();
+                            return;
+                        }
+                    }
+                }
+                current_entry = current_entry->next;
+            }
+            system(CLEAR);
+            wprintf(L"Couldn't find a matching entry\n");
+            wprintf(L"Press enter to return to the menu\n");
+            getchar();
+            getchar();
+            return;
+        }
+        default: {
+            system(CLEAR);
+            wprintf(L"Invalid option\n");
+            wprintf(L"Press enter to return to the menu\n");
+            getchar();
+            getchar();
+        }
+    }
 }
 
-Entry* displayEntries(Entry* first_entry) {
+void displayEntries(Entry* first_entry) {
     // Displays all entries in the list
     Entry *current_entry = first_entry;
     int index = 1;
@@ -107,18 +389,7 @@ Entry* displayEntries(Entry* first_entry) {
     wprintf(L"---\n");
     while (current_entry != nullptr) {
         wprintf(L"NO. %d\n", index);
-        wprintf(L"Name: %hs\n", current_entry->name);
-        wprintf(L"Lastname: %hs\n", current_entry->lastname);
-        wprintf(L"Age: %d\n", current_entry->age);
-        wprintf(L"PESEL: %d\n", current_entry->pesel);
-        int gender = current_entry->gender;
-        if (gender == 1) {
-            wprintf(L"Gender: Male\n");
-        } else if (gender == 2) {
-            wprintf(L"Gender: Female\n");
-        } else {
-            wprintf(L"Gender: Non-binary\n");
-        }
+        printEntry(current_entry);
         wprintf(L"---\n");
         current_entry = current_entry->next;
         index++;
@@ -126,7 +397,6 @@ Entry* displayEntries(Entry* first_entry) {
     wprintf(L"Press enter to return to the menu\n");
     getchar();
     getchar();
-    return first_entry;
 }
 
 Entry* browseEntries(Entry* first_entry) {
@@ -176,7 +446,7 @@ Entry* main_menu(Entry *first_entry) {
             switch(option) {
                 case 1: {
                     first_entry = addEntry(first_entry);
-                    continue;
+                    break;
                 }
                 case 2: {
                     system(CLEAR);
@@ -184,7 +454,7 @@ Entry* main_menu(Entry *first_entry) {
                     wprintf(L"Press enter to return to the menu.\n");
                     getchar();
                     getchar();
-                    continue;
+                    break;
                 }
                 case 3: {
                     system(CLEAR);
@@ -192,7 +462,7 @@ Entry* main_menu(Entry *first_entry) {
                     wprintf(L"Press enter to return to the menu.\n");
                     getchar();
                     getchar();
-                    continue;
+                    break;
                 }
                 case 4: {
                     system(CLEAR);
@@ -200,7 +470,7 @@ Entry* main_menu(Entry *first_entry) {
                     wprintf(L"Press enter to return to the menu.\n");
                     getchar();
                     getchar();
-                    continue;
+                    break;
                 }
                 case 5: {
                     system(CLEAR);
@@ -208,7 +478,7 @@ Entry* main_menu(Entry *first_entry) {
                     wprintf(L"Press enter to return to the menu.\n");
                     getchar();
                     getchar();
-                    continue;
+                    break;
                 }
                 case 6: {
                     system(CLEAR);
@@ -216,7 +486,7 @@ Entry* main_menu(Entry *first_entry) {
                     wprintf(L"Press enter to return to the menu.\n");
                     getchar();
                     getchar();
-                    continue;
+                    break;
                 }
                 case 7: {
                     system(CLEAR);
@@ -224,15 +494,15 @@ Entry* main_menu(Entry *first_entry) {
                     wprintf(L"Press enter to return to the menu.\n");
                     getchar();
                     getchar();
-                    continue;
+                    break;
                 }
                 case 8: {
                     first_entry = loadEntries(first_entry);
-                    continue;
+                    break;
                 }
                 case 9: {
                     exit = true;
-                    continue;
+                    break;
                 }
                 default: {
                     // resolve_easter_egg(option);
@@ -241,7 +511,7 @@ Entry* main_menu(Entry *first_entry) {
                     wprintf(L"Press enter to return to the menu.\n");
                     getchar();
                     getchar();
-                    continue;
+                    break;
                 }
             }
         } else {
@@ -263,39 +533,39 @@ Entry* main_menu(Entry *first_entry) {
             switch(option) {
                 case 1: {
                     first_entry = addEntry(first_entry);
-                    continue;
+                    break;
                 }
                 case 2: {
                     first_entry = removeEntry(first_entry);
-                    continue;
+                    break;
                 }
                 case 3: {
-                    first_entry = findEntry(first_entry);
-                    continue;
+                    findEntry(first_entry);
+                    break;
                 }
                 case 4: {
-                    first_entry = displayEntries(first_entry);
-                    continue;
+                    displayEntries(first_entry);
+                    break;
                 }
                 case 5: {
                     first_entry = browseEntries(first_entry);
-                    continue;
+                    break;
                 }
                 case 6: {
                     first_entry = sortEntries(first_entry);
-                    continue;
+                    break;
                 }
                 case 7: {
                     first_entry = saveEntries(first_entry);
-                    continue;
+                    break;
                 }
                 case 8: {
                     first_entry = loadEntries(first_entry);
-                    continue;
+                    break;
                 }
                 case 9: {
                     exit = true;
-                    continue;
+                    break;
                 }
                 default: {
                     // resolve_easter_egg(option);
@@ -304,7 +574,7 @@ Entry* main_menu(Entry *first_entry) {
                     wprintf(L"Press enter to return to the menu.\n");
                     getchar();
                     getchar();
-                    continue;
+                    break;
                 }
             }
         }
