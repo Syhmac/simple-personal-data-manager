@@ -21,6 +21,7 @@ A simple program for managing personal data. It allows you to add, remove, displ
 ## Usage
 Start the program and use the menu to navigate through the program.
 Every "screen" has a legend with the available options.
+When giving the program inputs use only ASCI characters.
 
 ## Installation
 1. Clone the repository
