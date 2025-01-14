@@ -1,16 +1,13 @@
 // Created: 2025-01-10 16:00:00
+// Version: 1.1
 #include <stdio.h>
 #include <stdlib.h>
 #include <locale.h>
 #include <string.h>
 #if _WIN32
     #define CLEAR "cls"
-    #define SLEEP(x) Sleep(x)
-    #include <windows.h>
 #elif __gnu_linux__
     #define CLEAR "clear"
-    #define SLEEP(x) usleep(x*1000)
-    #include <unistd.h>
     #include <wchar.h>
 #endif
 
@@ -615,6 +612,7 @@ void saveEntries(Entry* first_entry) {
         fprintf(file, "%d\n", current_entry->gender);
         current_entry = current_entry->next;
     }
+    fclose(file);
 }
 
 Entry* loadEntries(Entry* first_entry) {
@@ -675,6 +673,7 @@ Entry* loadEntries(Entry* first_entry) {
         prev_entry = current_entry;
         current_entry = current_entry->next;
     }
+    fclose(file);
     return first_entry;
 }
 

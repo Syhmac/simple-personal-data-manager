@@ -1,4 +1,4 @@
-# Simple personal data manager
+# Simple personal data manager using linked lists
 ## Disclaimer
 I know that it's not secure to store personal data in a text files, or any other files that are not a protected database.
 This is a university project that's meant to teach us how to use linked lists.
@@ -17,6 +17,7 @@ A simple program for managing personal data. It allows you to add, remove, displ
 - Save the list to a file
 - Load the list from a file
 - Text menu for easy navigation
+- Works on both Windows and Linux (tested on Windows 11 and Ubuntu 24.04)
 
 ## Usage
 Start the program and use the menu to navigate through the program.
