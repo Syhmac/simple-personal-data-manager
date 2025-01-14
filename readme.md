@@ -9,14 +9,14 @@ A simple program for managing personal data. It allows you to add, remove, displ
 
 ## Features
 - Add any amount of entries to the list (capped only by the amount of the memory available)
-- Search for an entry by name or lastname [WIP]
-- Remove an entry by name or lastname [WIP]
+- Search for an entry by name or lastname
+- Remove an entry by name or lastname
 - Display all entries from the start or the end of the list
-- Browse entries on the list [WIP]
-- Sorting the list by name or lastname [WIP]
-- Save the list to a file [WIP]
-- Load the list from a file [WIP]
-- Text menu for easy navigation [WIP]
+- Browse entries on the list
+- Sorting the list by name or lastname
+- Save the list to a file
+- Load the list from a file
+- Text menu for easy navigation
 
 ## Usage
 Start the program and use the menu to navigate through the program.

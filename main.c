@@ -399,27 +399,313 @@ void displayEntries(Entry* first_entry) {
     getchar();
 }
 
-Entry* browseEntries(Entry* first_entry) {
+void browseEntries(Entry* first_entry) {
     // Browses the entries in the list
-    // WIP
-    return first_entry;
+    // Count entries
+    int entries_count = 0;
+    Entry *current_entry = first_entry;
+    while (current_entry != nullptr) {
+        entries_count++;
+        current_entry = current_entry->next;
+    }
+    if (entries_count == 0) {
+        system(CLEAR);
+        wprintf(L"There are no entries to browse.\n");
+        wprintf(L"Press enter to return to the menu.\n");
+        getchar();
+        getchar();
+        return;
+    }
+    int current_index = 1;
+    current_entry = first_entry;
+    bool exit = false;
+    while(!exit) {
+        system(CLEAR);
+        wprintf(L"Entry %d / %d\n", current_index, entries_count);
+        printEntry(current_entry);
+        wprintf(L"---\n");
+        if (current_entry->prev != nullptr) {
+            wprintf(L"1. Previous entry\n");
+        } else {
+            wprintf(L"1. Previous entry [unavailable]\n");
+        }
+        wprintf(L"2. Exit browser\n");
+        if (current_entry->next != nullptr) {
+            wprintf(L"3. Next entry\n");
+        } else {
+            wprintf(L"3. Next entry [unavailable]\n");
+        }
+        wprintf(L"Select an option and press enter: ");
+        int option;
+        fflush(stdin);
+        scanf("%d", &option);
+        switch(option) {
+            case 1: {
+                if (current_entry->prev != nullptr) {
+                    current_entry = current_entry->prev;
+                    current_index--;
+                }
+                break;
+            }
+            case 2: {
+                exit = true;
+                break;
+            }
+            case 3: {
+                if (current_entry->next != nullptr) {
+                    current_entry = current_entry->next;
+                    current_index++;
+                }
+                break;
+            }
+            default: {
+                system(CLEAR);
+                wprintf(L"Invalid option\n");
+                wprintf(L"Press enter to return to the menu\n");
+                getchar();
+                getchar();
+                break;
+            }
+        }
+    }
 }
 
 Entry* sortEntries(Entry* first_entry) {
     // Sorts the entries in the list
-    // WIP
+    system(CLEAR);
+    wprintf(L"Do you want to sort by name or lastname?\n");
+    wprintf(L"1 - name; 2 - lastname\n");
+    int sort_by;
+    fflush(stdin);
+    scanf("%d", &sort_by);
+    switch (sort_by) {
+        case 1: {
+            // Counting entries
+            int entries_count = 0;
+            Entry *current_entry = first_entry;
+            while (current_entry != nullptr) {
+                entries_count++;
+                current_entry = current_entry->next;
+            }
+            system(CLEAR);
+            wprintf(L"Sorting entries by name\n");
+            for (int i = 0; i < entries_count; i++) {
+                current_entry = first_entry;
+                Entry *next_entry = current_entry->next;
+                while (next_entry != nullptr) {
+                    if (strcmp(current_entry->name, next_entry->name) > 0) {
+                        Entry *temp_entry = allocateEntry();
+                        // Current to temp
+                        strcpy(temp_entry->name, current_entry->name);
+                        strcpy(temp_entry->lastname, current_entry->lastname);
+                        temp_entry->age = current_entry->age;
+                        temp_entry->pesel = current_entry->pesel;
+                        temp_entry->gender = current_entry->gender;
+                        // Next to current
+                        strcpy(current_entry->name, next_entry->name);
+                        strcpy(current_entry->lastname, next_entry->lastname);
+                        current_entry->age = next_entry->age;
+                        current_entry->pesel = next_entry->pesel;
+                        current_entry->gender = next_entry->gender;
+                        // Temp to next
+                        strcpy(next_entry->name, temp_entry->name);
+                        strcpy(next_entry->lastname, temp_entry->lastname);
+                        next_entry->age = temp_entry->age;
+                        next_entry->pesel = temp_entry->pesel;
+                        next_entry->gender = temp_entry->gender;
+                        // Clean temp
+                        freeEntry(temp_entry);
+                    }
+                    next_entry = next_entry->next;
+                    current_entry = current_entry->next;
+                }
+            }
+            break;
+        }
+        case 2: {
+            // Counting entries
+            int entries_count = 0;
+            Entry *current_entry = first_entry;
+            while (current_entry != nullptr) {
+                entries_count++;
+                current_entry = current_entry->next;
+            }
+            system(CLEAR);
+            wprintf(L"Sorting entries by lastname\n");
+            for (int i = 0; i < entries_count; i++) {
+                current_entry = first_entry;
+                Entry *next_entry = current_entry->next;
+                while (next_entry != nullptr) {
+                    if (strcmp(current_entry->lastname, next_entry->lastname) > 0) {
+                        Entry *temp_entry = allocateEntry();
+                        // Current to temp
+                        strcpy(temp_entry->name, current_entry->name);
+                        strcpy(temp_entry->lastname, current_entry->lastname);
+                        temp_entry->age = current_entry->age;
+                        temp_entry->pesel = current_entry->pesel;
+                        temp_entry->gender = current_entry->gender;
+                        // Next to current
+                        strcpy(current_entry->name, next_entry->name);
+                        strcpy(current_entry->lastname, next_entry->lastname);
+                        current_entry->age = next_entry->age;
+                        current_entry->pesel = next_entry->pesel;
+                        current_entry->gender = next_entry->gender;
+                        // Temp to next
+                        strcpy(next_entry->name, temp_entry->name);
+                        strcpy(next_entry->lastname, temp_entry->lastname);
+                        next_entry->age = temp_entry->age;
+                        next_entry->pesel = temp_entry->pesel;
+                        next_entry->gender = temp_entry->gender;
+                        // Clean temp
+                        freeEntry(temp_entry);
+                    }
+                    next_entry = next_entry->next;
+                    current_entry = current_entry->next;
+                }
+            }
+            break;
+        }
+        default: {
+            system(CLEAR);
+            wprintf(L"Invalid option\n");
+            wprintf(L"Press enter to return to the menu\n");
+            getchar();
+            getchar();
+            return first_entry;
+        }
+    }
     return first_entry;
 }
 
-Entry* saveEntries(Entry* first_entry) {
+void saveEntries(Entry* first_entry) {
     // Saves the entries to a file
-    // WIP
-    return first_entry;
+    system(CLEAR);
+    wprintf(L"Insert the name of the file where you want to save data.\n");
+    wprintf(L"Do NOT include the file extension. Maximum 50 characters.\n");
+    char filename[50] = "";
+    fflush(stdin);
+    scanf("%s", filename);
+    strcat(filename, ".txt");
+    FILE *file = fopen(filename, "w");
+    if (file == nullptr) {
+        system(CLEAR);
+        wprintf(L"Error opening the file.\n");
+        wprintf(L"Press enter to return to the menu.\n");
+        getchar();
+        getchar();
+        return;
+    }
+    Entry *current_entry = first_entry;
+    while (current_entry != nullptr) {
+        fprintf(file, "%s\n", current_entry->name);
+        fprintf(file, "%s\n", current_entry->lastname);
+        fprintf(file, "%d\n", current_entry->age);
+        fprintf(file, "%d\n", current_entry->pesel);
+        fprintf(file, "%d\n", current_entry->gender);
+        current_entry = current_entry->next;
+    }
 }
 
 Entry* loadEntries(Entry* first_entry) {
     // Loads the entries from a file
-    // WIP
+    system(CLEAR);
+    wprintf(L"Insert the name of the file with the data.\n");
+    wprintf(L"Do NOT include the file extension. Maximum 50 characters.\n");
+    char filename[50] = "";
+    fflush(stdin);
+    scanf("%s", filename);
+    strcat(filename, ".txt");
+    FILE *file = fopen(filename, "r");
+    if (file == nullptr) {
+        system(CLEAR);
+        wprintf(L"Error opening the file.\n");
+        wprintf(L"Press enter to return to the menu.\n");
+        getchar();
+        getchar();
+        return first_entry;
+    }
+    if (first_entry == nullptr) {
+        first_entry = allocateEntry();
+        first_entry->prev = nullptr;
+    }
+    Entry *current_entry = first_entry;
+    Entry *prev_entry = nullptr;
+    while (!feof(file)) {
+        if (current_entry != first_entry) {
+            current_entry->prev = prev_entry;
+        }
+
+        char name[50] = "";
+        char lastname[50] = "";
+        int age = 0;
+        int pesel = 0;
+        int gender = -1;
+
+        fscanf(file, "%s", name);
+        fscanf(file, "%s", lastname);
+        fscanf(file, "%d", &age);
+        fscanf(file, "%d", &pesel);
+        fscanf(file, "%d", &gender);
+        fscanf(file, "\n");
+
+        strcpy(current_entry->name, name);
+        strcpy(current_entry->lastname, lastname);
+        current_entry->age = age;
+        current_entry->pesel = pesel;
+        current_entry->gender = gender;
+
+        if (feof(file)) {
+            current_entry->next = nullptr;
+            break;
+        } else {
+            Entry *next_entry = allocateEntry();
+            current_entry->next = next_entry;
+        }
+        prev_entry = current_entry;
+        current_entry = current_entry->next;
+    }
+    return first_entry;
+}
+
+Entry* debugEntries() {
+    // Debug function to add a few entries to test functions
+    Entry* first_entry = allocateEntry();
+    Entry* second_entry = allocateEntry();
+    Entry* third_entry = allocateEntry();
+    Entry* fourth_entry = allocateEntry();
+
+    first_entry->prev = nullptr;
+    strcpy(first_entry->name, "John");
+    strcpy(first_entry->lastname, "Doe");
+    first_entry->age = 25;
+    first_entry->pesel = 123456789;
+    first_entry->gender = 1;
+    first_entry->next = second_entry;
+
+    second_entry->prev = first_entry;
+    strcpy(second_entry->name, "Alice");
+    strcpy(second_entry->lastname, "Smith");
+    second_entry->age = 30;
+    second_entry->pesel = 987654321;
+    second_entry->gender = 2;
+    second_entry->next = third_entry;
+
+    third_entry->prev = second_entry;
+    strcpy(third_entry->name, "Bob");
+    strcpy(third_entry->lastname, "Johnson");
+    third_entry->age = 40;
+    third_entry->pesel = 123123123;
+    third_entry->gender = 1;
+    third_entry->next = fourth_entry;
+
+    fourth_entry->prev = third_entry;
+    strcpy(fourth_entry->name, "Eve");
+    strcpy(fourth_entry->lastname, "Brown");
+    fourth_entry->age = 35;
+    fourth_entry->pesel = 321321321;
+    fourth_entry->gender = 2;
+    fourth_entry->next = nullptr;
+
     return first_entry;
 }
 
@@ -548,7 +834,7 @@ Entry* main_menu(Entry *first_entry) {
                     break;
                 }
                 case 5: {
-                    first_entry = browseEntries(first_entry);
+                    browseEntries(first_entry);
                     break;
                 }
                 case 6: {
@@ -556,7 +842,7 @@ Entry* main_menu(Entry *first_entry) {
                     break;
                 }
                 case 7: {
-                    first_entry = saveEntries(first_entry);
+                    saveEntries(first_entry);
                     break;
                 }
                 case 8: {
@@ -595,7 +881,10 @@ int garbage_collector(Entry *first_entry) {
 int main(void) {
     setlocale(LC_ALL, "Polish");
     wprintf(L"Loading program\n");
+    // Release
     Entry *first_entry = nullptr;
+    // Debug
+    // Entry *first_entry = debugEntries();
     system(CLEAR);
     first_entry = main_menu(first_entry);
     system(CLEAR);
