@@ -1,5 +1,4 @@
 // Created: 2025-01-10 16:00:00
-#include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <locale.h>
@@ -494,27 +493,33 @@ Entry* sortEntries(Entry* first_entry) {
                 Entry *next_entry = current_entry->next;
                 while (next_entry != nullptr) {
                     if (strcmp(current_entry->name, next_entry->name) > 0) {
-                        Entry *temp_entry = allocateEntry();
-                        // Current to temp
-                        strcpy(temp_entry->name, current_entry->name);
-                        strcpy(temp_entry->lastname, current_entry->lastname);
-                        temp_entry->age = current_entry->age;
-                        temp_entry->pesel = current_entry->pesel;
-                        temp_entry->gender = current_entry->gender;
-                        // Next to current
-                        strcpy(current_entry->name, next_entry->name);
-                        strcpy(current_entry->lastname, next_entry->lastname);
-                        current_entry->age = next_entry->age;
-                        current_entry->pesel = next_entry->pesel;
-                        current_entry->gender = next_entry->gender;
-                        // Temp to next
-                        strcpy(next_entry->name, temp_entry->name);
-                        strcpy(next_entry->lastname, temp_entry->lastname);
-                        next_entry->age = temp_entry->age;
-                        next_entry->pesel = temp_entry->pesel;
-                        next_entry->gender = temp_entry->gender;
-                        // Clean temp
-                        freeEntry(temp_entry);
+                        Entry *temp_entry = nullptr;
+
+                        if (current_entry->prev != nullptr) {
+                            current_entry->prev->next = next_entry;
+                        }
+
+                        if (next_entry->next != nullptr) {
+                            next_entry->next->prev = current_entry;
+                        }
+
+                        temp_entry = current_entry->prev;
+                        current_entry->prev = next_entry;
+                        next_entry->prev = temp_entry;
+
+                        current_entry->next = next_entry->next;
+                        next_entry->next = current_entry;
+
+                        if(next_entry->prev == nullptr) {
+                            first_entry = next_entry;
+                        } else if (current_entry->prev == nullptr) {
+                            first_entry = current_entry;
+                        }
+
+                        temp_entry = current_entry;
+                        current_entry = next_entry;
+                        next_entry = temp_entry;
+
                     }
                     next_entry = next_entry->next;
                     current_entry = current_entry->next;
@@ -537,27 +542,33 @@ Entry* sortEntries(Entry* first_entry) {
                 Entry *next_entry = current_entry->next;
                 while (next_entry != nullptr) {
                     if (strcmp(current_entry->lastname, next_entry->lastname) > 0) {
-                        Entry *temp_entry = allocateEntry();
-                        // Current to temp
-                        strcpy(temp_entry->name, current_entry->name);
-                        strcpy(temp_entry->lastname, current_entry->lastname);
-                        temp_entry->age = current_entry->age;
-                        temp_entry->pesel = current_entry->pesel;
-                        temp_entry->gender = current_entry->gender;
-                        // Next to current
-                        strcpy(current_entry->name, next_entry->name);
-                        strcpy(current_entry->lastname, next_entry->lastname);
-                        current_entry->age = next_entry->age;
-                        current_entry->pesel = next_entry->pesel;
-                        current_entry->gender = next_entry->gender;
-                        // Temp to next
-                        strcpy(next_entry->name, temp_entry->name);
-                        strcpy(next_entry->lastname, temp_entry->lastname);
-                        next_entry->age = temp_entry->age;
-                        next_entry->pesel = temp_entry->pesel;
-                        next_entry->gender = temp_entry->gender;
-                        // Clean temp
-                        freeEntry(temp_entry);
+                        Entry *temp_entry = nullptr;
+
+                        if (current_entry->prev != nullptr) {
+                            current_entry->prev->next = next_entry;
+                        }
+
+                        if (next_entry->next != nullptr) {
+                            next_entry->next->prev = current_entry;
+                        }
+
+                        temp_entry = current_entry->prev;
+                        current_entry->prev = next_entry;
+                        next_entry->prev = temp_entry;
+
+                        current_entry->next = next_entry->next;
+                        next_entry->next = current_entry;
+
+                        if(next_entry->prev == nullptr) {
+                            first_entry = next_entry;
+                        } else if (current_entry->prev == nullptr) {
+                            first_entry = current_entry;
+                        }
+
+                        temp_entry = current_entry;
+                        current_entry = next_entry;
+                        next_entry = temp_entry;
+
                     }
                     next_entry = next_entry->next;
                     current_entry = current_entry->next;
@@ -869,6 +880,7 @@ Entry* main_menu(Entry *first_entry) {
 }
 
 int garbage_collector(Entry *first_entry) {
+    // Frees all the memory allocated for the entries
     Entry *current_entry = first_entry;
     while (current_entry != nullptr) {
         Entry *next_entry = current_entry->next;
